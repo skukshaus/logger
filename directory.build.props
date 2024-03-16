@@ -1,0 +1,24 @@
+<Project>
+    <PropertyGroup>
+        <Authors>Sergej Kukshaus</Authors>
+        
+        <AssemblyVersion>2024.1.1</AssemblyVersion>
+        <FileVersion>$(AssemblyVersion)</FileVersion>
+        <Version>$(AssemblyVersion)</Version>
+
+        <TargetFramework>net8.0</TargetFramework>
+        <LangVersion>latest</LangVersion>
+
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+
+        <NeutralLanguage>en-US</NeutralLanguage>
+
+        <OutputPath>..\_bin\$(Configuration)\</OutputPath>
+        <IntermediateOutputPath>..\_obj\$(Configuration)\</IntermediateOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(AssemblyName.EndsWith('.Tests'))">
+        <OutputPath>..\_bin\$(AssemblyName)\</OutputPath>
+    </PropertyGroup>
+</Project>
