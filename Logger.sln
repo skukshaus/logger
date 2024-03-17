@@ -6,6 +6,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger.Abstractions", "Logg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logger.Tests", "Logger.Tests\Logger.Tests.csproj", "{5FFC2C91-4A55-4764-9745-2C633C53FAE1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{AC80860E-1E8E-48B8-9EC3-A296E47298D3}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		directory.build.props = directory.build.props
+		directory.packages.props = directory.packages.props
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

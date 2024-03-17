@@ -1,24 +1,31 @@
-namespace Kukshaus.Logger.Tests.StandardLoggerTests;
+namespace Ksh.Logger.Tests.StandardLoggerTests;
 
-public class StandardLoggerTest
+public partial class StandardLoggerTest
 {
-    private StandardLogger _systemUnderTest;
+    private readonly StandardLogger _logger;
+
+    private readonly Mock<ILogMessagePropagator> _propagatorMoq = new();
+    private readonly Mock<ILogMessagePropagator> _propagator2Moq = new();
+    private readonly Mock<ILogMessagePropagator> _propagator3Moq = new();
+
+    private readonly LogMessage _dummyMessage = new("hello world");
 
     public StandardLoggerTest()
     {
-        _systemUnderTest = new();
+        var propagators = new List<ILogMessagePropagator> {
+            _propagatorMoq.Object,
+            _propagator2Moq.Object,
+            _propagator3Moq.Object
+        };
+
+        _logger = new(propagators);
     }
 
-    [Fact] 
-    public void AfterInitialisationInstanceIsNotNull()
+    [Fact]
+    public void Init_MustNotBeNull()
     {
-        // Arrange
-        
-        // Act
-        
-        // Assert
         using var _ = new AssertionScope();
-        
-        _systemUnderTest.Should().NotBeNull();
+
+        _logger.Should().NotBeNull();
     }
 }

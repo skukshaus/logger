@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <AssemblyName>Kukshaus.Logger</AssemblyName>
-        <RootNamespace>$(AssemblyName)</RootNamespace>
-        <PackageId>$(AssemblyName)</PackageId>
-        <Product>$(AssemblyName)</Product>
-
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Logger.Abstractions\Logger.Abstractions.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
     </ItemGroup>
 
 </Project>
