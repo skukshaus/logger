@@ -1,4 +1,4 @@
-namespace Kukshaus.Logger.Abstractions.Exceptions;
+namespace Ksh.Logger.Abstractions.Exceptions;
 
 [ExcludeFromCodeCoverage]
 public class LoggerException : Exception
