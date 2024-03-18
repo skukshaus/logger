@@ -1,8 +1,23 @@
 # Ksh.Logger
 
+[![develop](https://github.com/skukshaus/logger/actions/workflows/deploy_develop.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/deploy_develop.yml)
+[![main](https://github.com/skukshaus/logger/actions/workflows/deploy_main.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/deploy_main.yml)
+
+| package                 | version                                                                                                                         | downloads                                                                                                                        |
+|-------------------------|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| Ksh.Logger              | [![NuGet](https://img.shields.io/nuget/v/ksh.logger.svg)](https://www.nuget.org/packages/ksh.logger/)                           | [![NuGet](https://img.shields.io/nuget/dt/ksh.logger.svg)](https://www.nuget.org/packages/ksh.logger/)                           |
+| Ksh.Logger.Abstractions | [![NuGet](https://img.shields.io/nuget/v/ksh.logger.abstractions.svg)](https://www.nuget.org/packages/ksh.logger.abstractions/) | [![NuGet](https://img.shields.io/nuget/dt/ksh.logger.abstractions.svg)](https://www.nuget.org/packages/ksh.logger.abstractions/) |
+
 The most flexible logger on the planet!
 
-## Simple  usage
+## Main contents
+
+* [Simple usage](#simple-usage)
+* [Using with Dependency Injection](#using-with-microsoft-dependency-injection)
+* [Customisation](#customization)
+    * [Propagators](#propagators)
+
+## Simple usage
 
 `````csharp
 var propagators = new List<ILogMessagePropagator> {
