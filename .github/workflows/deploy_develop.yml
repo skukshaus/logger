@@ -22,17 +22,17 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore --nologo
 
       - name: Build and Test
         run: |
-          dotnet build --no-restore
-          dotnet test --no-build
+          dotnet build --no-restore --nologo
+          dotnet test --no-build --nologo
 
       - name: Create Release NuGet Package
         run: |
-          dotnet publish
-          dotnet pack --version-suffix rc.${{github.run_number}} --include-source
+          dotnet publish --no-restore --nologo
+          dotnet pack --version-suffix rc.${{github.run_number}} --include-source --nologo
 
       - name: Publish NuGet Package
         run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate

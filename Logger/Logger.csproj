@@ -10,12 +10,12 @@
         <Nullable>enable</Nullable>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-        <Version>$(AssemblyVersion)</Version>
+        <VersionPrefix>$(AssemblyVersion)</VersionPrefix>
         <Title>$(AssemblyName)</Title>
         <Description>The most flexible logger on earth</Description>
         <PackageId>$(AssemblyName)</PackageId>
         <PackageProjectUrl>https://github.com/skukshaus/logger</PackageProjectUrl>
-        <PackageLicense>https://raw.githubusercontent.com/skukshaus/logger/main/LICENSE</PackageLicense>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/skukshaus/logger</RepositoryUrl>
         <RepositoryType>github</RepositoryType>
         <PackageTags>logger, solid, abstraction, contract, dependency, injection</PackageTags>
@@ -23,8 +23,14 @@
         <NeutralLanguage>en-US</NeutralLanguage>
         <OutputPath>..\.bin\$(Configuration)\</OutputPath>
         <IntermediateOutputPath>..\.obj\$(Configuration)\</IntermediateOutputPath>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
+
+    <ItemGroup>
+        <None Include="..\README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    
     <ItemGroup>
         <ProjectReference Include="..\Logger.Abstractions\Logger.Abstractions.csproj"/>
     </ItemGroup>

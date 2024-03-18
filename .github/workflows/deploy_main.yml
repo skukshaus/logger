@@ -20,17 +20,17 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore --nologo
 
       - name: Build and Test
         run: |
-          dotnet build --no-restore
-          dotnet test --no-build --verbosity normal
+          dotnet build --no-restore --nologo
+          dotnet test --no-build --verbosity normal --nologo
 
       - name: Create Release NuGet Package
         run: |
-          dotnet publish
-          dotnet pack
+          dotnet publish --no-restore --nologo
+          dotnet pack --nologo
 
       - name: Publish NuGet Package
         run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --no-symbols true --skip-duplicate
