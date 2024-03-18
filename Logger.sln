@@ -9,10 +9,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".misc", ".misc", "{AC80860E-1E8E-48B8-9EC3-A296E47298D3}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		directory.build.props = directory.build.props
-		directory.packages.props = directory.packages.props
 		LICENSE = LICENSE
 		README.md = README.md
+		.github\workflows\deploy_develop.yml = .github\workflows\deploy_develop.yml
+		.github\workflows\deploy_main.yml = .github\workflows\deploy_main.yml
 	EndProjectSection
 EndProject
 Global

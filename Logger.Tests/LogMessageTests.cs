@@ -8,7 +8,7 @@ public class LogMessageTests
         var exn = new ArgumentException();
         var sut = new LogMessage("foo", LogSeverity.Trace, exn);
 
-        sut.Deconstruct(out string message, out LogSeverity severity, out Exception? exception, out DateTime dateTime);
+        sut.Deconstruct(out var message, out var severity, out var exception, out var dateTime);
 
         message.Should().Be("foo");
         severity.Should().Be(LogSeverity.Trace);

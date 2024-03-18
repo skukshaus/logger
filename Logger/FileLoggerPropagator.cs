@@ -1,10 +1,10 @@
 namespace Ksh.Logger;
 
-public class FileLoggerPropagator(ILogMessageFormatter formatter, string? pathToLogFile) : ILogMessagePropagator
+public class FileLoggerPropagator(ILogMessageFormatter formatter, string pathToLogFile) : ILogMessagePropagator
 {
     private bool _isPathValidated;
 
-    public FileLoggerPropagator(string? pathToLogFile) : this(new StandardLogMessageFormatter(), pathToLogFile)
+    public FileLoggerPropagator(string pathToLogFile) : this(new StandardLogMessageFormatter(), pathToLogFile)
     {
     }
 
