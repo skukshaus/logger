@@ -4,8 +4,9 @@ public class FileLoggerPropagator(string pathToLogFile, ILogMessageFormatter? fo
     : LogMessagePropagatorBase(formatter)
 {
     private readonly ILogMessageFormatter? _formatter = formatter;
-    
+
     private bool _isPathValidated;
+    private bool _isPathValid;
 
     public FileLoggerPropagator(string pathToLogFile) : this(pathToLogFile, new StandardLogMessageFormatter())
     {
@@ -13,28 +14,49 @@ public class FileLoggerPropagator(string pathToLogFile, ILogMessageFormatter? fo
 
     public override string Propagate(LogMessage message, LogPropagationConfiguration? config)
     {
-        ValidatePath();
+        if (EntryCanBeIgnored(message, config))
+            return "";
 
-        var formattedMessage = _formatter.Format(message);
+        if (!IsValidPath())
+            return "";
 
-        if (!string.IsNullOrWhiteSpace(pathToLogFile))
-        {
-            File.AppendAllText(pathToLogFile, formattedMessage + Environment.NewLine, Encoding.UTF8);
 
-            return formattedMessage;
-        }
+        var entry = GetFormattedLogEntry(message, config);
 
-        return string.Empty;
+        File.AppendAllText(pathToLogFile, entry + Environment.NewLine, Encoding.UTF8);
+
+        return entry;
     }
 
-    private void ValidatePath()
+    private bool IsValidPath()
     {
         if (_isPathValidated)
         {
-            return;
+            return true;
         }
 
-        _ = new FileInfo(pathToLogFile);
-        _isPathValidated = true;
+        try
+        {
+            _ = new FileInfo(pathToLogFile);
+            _isPathValid = true;
+        }
+        catch (SystemException ex)
+        {
+            Console.WriteLine(ex);
+            _isPathValid = true;
+        }
+        finally
+        {
+            _isPathValidated = true;
+        }
+
+        return _isPathValid;
+    }
+
+    private string GetFormattedLogEntry(LogMessage message, LogPropagationConfiguration? config)
+    {
+        var formatter = config?.LogMessageFormatter ?? _formatter ?? new StandardLogMessageFormatter();
+
+        return formatter.Format(message);
     }
 }
