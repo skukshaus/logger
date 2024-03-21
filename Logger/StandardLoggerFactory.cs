@@ -1,22 +1,48 @@
 namespace Ksh.Logger;
 
-public class StandardLoggerFactory(ILogMessageFormatter formatter) : ILoggerFactory
+public class StandardLoggerFactory : ILoggerFactory
 {
     private readonly IList<ILogMessagePropagator> _propagators = [];
+    private ILogMessageFormatter? _formatter;
 
-    public void AddConsoleLogger() => AddPropagator(new ConsoleLoggerPropagator(formatter));
+    public IEnumerable<ILogMessagePropagator> MessagePropagators => _propagators;
+    public ILogMessageFormatter MessageFormatter => GetFormatterSafe(_formatter);
 
-    public void AddFileLogger(string pathToLogFile)
-        => AddPropagator(new FileLoggerPropagator(formatter, pathToLogFile));
-
-    public void AddPropagator(ILogMessagePropagator propagator)
+    public StandardLoggerFactory()
     {
-        _propagators.Add(propagator);
     }
 
-    public void SetFormatter(ILogMessageFormatter formatter1)
+    public StandardLoggerFactory(ILogMessageFormatter formatter)
     {
-        formatter = formatter1;
+        _formatter = formatter;
+    }
+
+    public ILoggerFactory AddConsoleLogger(ILogMessageFormatter? formatter = null)
+    {
+        var safeFormatter = GetFormatterSafe(formatter);
+
+        return AddPropagator(new ConsoleLoggerPropagator(safeFormatter));
+    }
+
+    public ILoggerFactory AddFileLogger(string pathToLogFile, ILogMessageFormatter? formatter = null)
+    {
+        var safeFormatter = GetFormatterSafe(formatter);
+
+        return AddPropagator(new FileLoggerPropagator(safeFormatter, pathToLogFile));
+    }
+
+    public ILoggerFactory AddPropagator(ILogMessagePropagator propagator)
+    {
+        _propagators.Add(propagator);
+        
+        return this;
+    }
+
+    public ILoggerFactory SetFormatter(ILogMessageFormatter formatter1)
+    {
+        _formatter = formatter1;
+
+        return this;
     }
 
     public ILogger CreateLogger()
@@ -24,6 +50,6 @@ public class StandardLoggerFactory(ILogMessageFormatter formatter) : ILoggerFact
         return new StandardLogger(_propagators);
     }
 
-    public IEnumerable<ILogMessagePropagator> MessagePropagators => _propagators;
-    public ILogMessageFormatter MessageFormatter => formatter;
+    private ILogMessageFormatter GetFormatterSafe([NotNullWhen(true)] ILogMessageFormatter? formatter)
+        => formatter ?? _formatter ?? new StandardLogMessageFormatter();
 }

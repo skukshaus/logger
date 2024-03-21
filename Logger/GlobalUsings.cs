@@ -5,4 +5,5 @@ global using System.IO;
 global using System.Text;
 global using Ksh.Logger.Abstractions;
 global using Ksh.Logger.Abstractions.DataClasses;
+global using Ksh.Logger.Abstractions.Exceptions;
 global using Microsoft.Extensions.DependencyInjection;

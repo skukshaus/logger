@@ -1,8 +1,9 @@
 # Ksh.Logger
 
+[//]: # ([![devel]&#40;https://github.com/skukshaus/logger/actions/workflows/devel.yml/badge.svg&#41;]&#40;https://github.com/skukshaus/logger/actions/workflows/devel.yml&#41;)
+[//]: # ([![main]&#40;https://github.com/skukshaus/logger/actions/workflows/main.yml/badge.svg&#41;]&#40;https://github.com/skukshaus/logger/actions/workflows/main.yml&#41;)
+
 [![test](https://github.com/skukshaus/logger/actions/workflows/test.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/test.yml)
-[![devel](https://github.com/skukshaus/logger/actions/workflows/devel.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/devel.yml)
-[![main](https://github.com/skukshaus/logger/actions/workflows/main.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/main.yml)
 [![GitHub License](https://img.shields.io/github/license/skukshaus/logger)](https://github.com/skukshaus/logger/blob/main/LICENSE)
 
 | package                 | version                                                                                                                         | downloads                                                                                                                        |
@@ -14,56 +15,68 @@ The most flexible logger on the planet!
 
 ## Main contents
 
-* [Simple usage](#simple-usage)
-* [Using with Dependency Injection](#using-with-microsoft-dependency-injection)
-* [Customisation](#customization)
-    * [Propagators](#propagators)
++ [LoggerFactory](#loggerfactory)
++ [ServiceCollection](#servicecollection)
++ [Customisation](#customization)
+  + [Propagators](#propagators)
 
-## Simple usage
+## LoggerFactory
 
-`````csharp
-var propagators = new List<ILogMessagePropagator> {
-    new ConsoleLoggerPropagator(),
-    new FileLoggerPropagator("path.to.log")
-};
-var logger = new StandardLogger(propagators);
+```csharp
+var logger = new StandardLoggerFactory()
+    .AddConsoleLogger()
+    .AddFileLogger("path.to.log")
+    .CreateLogger();
 
 logger.Info("hello world");
-`````
+```
+It looks simpler, but you have also the direct dependencies and violate the 
+DIP (dependency inversion principle).
 
-It looks simpler, but you have also the direct dependencies and violate the DIP (dependency inversion principle).
+## ServiceCollection
 
+Please make sure, the package is installed already.
+```
+dotnet add package Microsoft.Extensions.DependencyInjection
+```
 
+Afterwards you can register the module and configure the logger. Afterwards you
+are able to inject the logger in any class you want.
 
-## Using with Microsoft Dependency Injection
-
-`````csharp
+```csharp
 var services = new ServiceCollection();
+
 services.AddKshLogger();
+services.AddSingleton<ILogger>(
+    srv => srv.GetService<ILoggerFactory>()!
+        .AddConsoleLogger()
+        .AddFileLogger("path.to.log")
+        .CreateLogger()
+);
 
+// just for demo, you don't need this in production 
 var kernel = services.BuildServiceProvider();
-var loggerFactory = kernel.GetService<ILoggerFactory>()!;
+var logger = kernel.GetService<ILogger>()!;
 
-loggerFactory.AddConsoleLogger();
-loggerFactory.AddFileLogger("path.to.log");
-
-var logger = loggerFactory.CreateLogger();
 logger.Info("hello world");
-`````
-You are already ready to log into a file as well as into console. Of course, you can skip the console or the file 
-logger if you wish.
+```
+
+You are already ready to log into a file as well as into console. Of course, 
+you can skip the console or the file logger if you wish.
 
 ## Customization
 
-As mentioned, this Logger is very flexible. It is even possible to connect multiple existing logging frameworks. 
+As mentioned, this Logger is very flexible. It is even possible to connect 
+multiple existing logging frameworks. 
 
 ### Propagators
 
 The power of this Logger are the Propagators 
 
-Here is an example, how to be notified if your crashed and reported a fatal error.
+Here is an example, how to be notified if your crashed and reported a fatal 
+error.
 
-`````csharp
+```csharp
 public class CustomPropagator(IEmailClient emailClient) : ILogMessagePropagator
 {
     public void Propagate(LogMessage message)
@@ -74,9 +87,10 @@ public class CustomPropagator(IEmailClient emailClient) : ILogMessagePropagator
         }
     }
 }
-`````
+```
 
 Just put this propagator into your factory or directly into the logger.
-`````csharp
+
+```csharp
 loggerFactory.AddPropagator(new CustomPropagator(emailClient));
-`````
+```

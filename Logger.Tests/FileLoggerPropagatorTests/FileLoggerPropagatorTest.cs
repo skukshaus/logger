@@ -17,22 +17,13 @@ public partial class FileLoggerPropagatorTest : IDisposable
 
     private string GetContent() => File.ReadAllText(LogFileName);
 
-    ~FileLoggerPropagatorTest()
-    {
-        ReleaseUnmanagedResources();
-    }
-
-    private void ReleaseUnmanagedResources()
+    public void Dispose()
     {
         if (File.Exists(LogFileName))
         {
             File.Delete(LogFileName);
         }
-    }
-
-    public void Dispose()
-    {
-        ReleaseUnmanagedResources();
+        
         GC.SuppressFinalize(this);
     }
 }

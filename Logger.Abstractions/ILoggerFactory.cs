@@ -2,13 +2,13 @@ namespace Ksh.Logger.Abstractions;
 
 public interface ILoggerFactory
 {
-    void AddConsoleLogger();
+    ILoggerFactory AddConsoleLogger(ILogMessageFormatter? formatter = null);
 
-    void AddFileLogger(string pathToLogFile);
+    ILoggerFactory AddFileLogger(string pathToLogFile, ILogMessageFormatter? formatter = null);
 
-    void AddPropagator(ILogMessagePropagator propagator);
+    ILoggerFactory AddPropagator(ILogMessagePropagator propagator);
 
-    void SetFormatter(ILogMessageFormatter formatter);
+    ILoggerFactory SetFormatter(ILogMessageFormatter formatter);
 
     ILogger CreateLogger();
 }
