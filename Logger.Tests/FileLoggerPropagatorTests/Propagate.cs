@@ -23,7 +23,7 @@ public partial class FileLoggerPropagatorTest
         // Act
         _propagator.Propagate(new("Hello World"));
         _propagator.Propagate(new("Bye World"));
-
+        
         // Assert
         using var _ = new AssertionScope();
         GetContent().Should().Be(

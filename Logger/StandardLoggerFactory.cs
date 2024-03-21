@@ -28,7 +28,7 @@ public class StandardLoggerFactory : ILoggerFactory
     {
         var safeFormatter = GetFormatterSafe(formatter);
 
-        return AddPropagator(new FileLoggerPropagator(safeFormatter, pathToLogFile));
+        return AddPropagator(new FileLoggerPropagator(pathToLogFile, safeFormatter));
     }
 
     public ILoggerFactory AddPropagator(ILogMessagePropagator propagator)

@@ -38,7 +38,7 @@ public partial class StandardLoggerFactoryTest
         // Arrange
 
         // Act
-        _factory.AddPropagator(new InternalPropagator());
+        _factory.AddPropagator(new InternalPropagator(null));
 
         // Assert
         using var _ = new AssertionScope();
@@ -55,7 +55,7 @@ public partial class StandardLoggerFactoryTest
         // Act
         _factory.AddConsoleLogger();
         _factory.AddFileLogger("fancy.log");
-        _factory.AddPropagator(new InternalPropagator());
+        _factory.AddPropagator(new InternalPropagator(null));
 
         // Assert
         using var _ = new AssertionScope();

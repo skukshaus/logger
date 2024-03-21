@@ -1,23 +1,18 @@
 namespace Ksh.Logger;
 
-public class ConsoleLoggerPropagator(ILogMessageFormatter formatter) : ILogMessagePropagator
+public class ConsoleLoggerPropagator(ILogMessageFormatter formatter) : LogMessagePropagatorBase(formatter)
 {
+    private readonly ILogMessageFormatter _formatter = formatter;
+
     public ConsoleLoggerPropagator() : this(new StandardLogMessageFormatter())
     {
     }
 
-    public string Propagate(LogMessage message)
+    public override string Propagate(LogMessage message, LogPropagationConfiguration? config)
     {
-        var formattedMessage = formatter.Format(message);
+        var formattedMessage = _formatter.Format(message);
         Console.WriteLine(formattedMessage);
-        
+
         return formattedMessage;
     }
-
-    public string Propagate(LogMessage message, LogPropagationConfiguration config)
-    {
-        throw new NotImplementedException();
-    }
-
-    public ILogMessageFormatter GetFormatter() => throw new NotImplementedException();
 }

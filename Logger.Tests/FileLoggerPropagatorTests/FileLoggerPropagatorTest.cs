@@ -12,7 +12,7 @@ public partial class FileLoggerPropagatorTest : IDisposable
             .Setup(x => x.Format(It.IsAny<LogMessage>()))
             .Returns((LogMessage x) => x.Message);
 
-        _propagator = new(formatter.Object, LogFileName);
+        _propagator = new(LogFileName, formatter.Object);
     }
 
     private string GetContent() => File.ReadAllText(LogFileName);
