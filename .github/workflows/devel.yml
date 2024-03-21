@@ -1,13 +1,8 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: deploy develop
+name: develop
 
 on:
   push:
-    branches: ["develop"]
-  pull_request:
-    branches: ["develop"]
+    tags: ["rc**"]
 
 jobs:
   build:
@@ -29,10 +24,10 @@ jobs:
           dotnet build --no-restore --nologo
           dotnet test --no-build --nologo
 
-      - name: Create Release NuGet Package
+      - name: Create NuGet Package
         run: |
-          dotnet publish --no-restore --nologo
-          dotnet pack --version-suffix rc.${{github.run_number}} --include-source --nologo
+          dotnet publish --configuration Debug --no-restore --nologo
+          dotnet pack --configuration Debug --version-suffix rc.${{github.run_number}} --include-source --nologo
 
       - name: Publish NuGet Package
         run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --skip-duplicate

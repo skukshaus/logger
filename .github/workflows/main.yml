@@ -1,12 +1,9 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: deploy main
+name: main
 
 on:
   push:
-    branches: ["main"]
-  
+    tags: ["v**"]
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,7 +24,7 @@ jobs:
           dotnet build --no-restore --nologo
           dotnet test --no-build --verbosity normal --nologo
 
-      - name: Create Release NuGet Package
+      - name: Create NuGet Package
         run: |
           dotnet publish --no-restore --nologo
           dotnet pack --nologo

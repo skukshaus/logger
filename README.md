@@ -1,7 +1,9 @@
 # Ksh.Logger
 
-[![develop](https://github.com/skukshaus/logger/actions/workflows/deploy_develop.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/deploy_develop.yml)
-[![main](https://github.com/skukshaus/logger/actions/workflows/deploy_main.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/deploy_main.yml)
+[![test](https://github.com/skukshaus/logger/actions/workflows/test.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/test.yml)
+[![devel](https://github.com/skukshaus/logger/actions/workflows/devel.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/devel.yml)
+[![main](https://github.com/skukshaus/logger/actions/workflows/main.yml/badge.svg)](https://github.com/skukshaus/logger/actions/workflows/main.yml)
+[![GitHub License](https://img.shields.io/github/license/skukshaus/logger)](https://github.com/skukshaus/logger/blob/main/LICENSE)
 
 | package                 | version                                                                                                                         | downloads                                                                                                                        |
 |-------------------------|---------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|
