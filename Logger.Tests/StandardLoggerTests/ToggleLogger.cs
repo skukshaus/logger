@@ -20,11 +20,29 @@ public partial class StandardLoggerTest
         _logger.TurnOff();
         _logger.Log(_dummyMessage);
         _logger.TurnOn();
-        
+
         // act
         _logger.Log(_dummyMessage);
 
         // assert
         _propagatorMoq.Verify(x => x.Propagate(_dummyMessage), Times.Once);
+    }
+
+    [Fact] public void Toggling_MustReturnTheCorrectStatus()
+    {
+        using var _ = new AssertionScope();
+
+        _logger.TurnOn().Should().BeFalse("its already on");
+        
+        _logger.TurnOff().Should().BeTrue("its was on");
+        _logger.TurnOff().Should().BeFalse("its already off");
+        _logger.TurnOff().Should().BeFalse("its already off");
+        
+        _logger.TurnOn().Should().BeTrue("its was off");
+        _logger.TurnOn().Should().BeFalse("its already on");
+        
+        _logger.TurnOff().Should().BeTrue("its was on");
+        _logger.TurnOff().Should().BeFalse("its already off");
+        _logger.TurnOff().Should().BeFalse("its already off");
     }
 }

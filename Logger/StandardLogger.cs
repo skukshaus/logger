@@ -1,52 +1,79 @@
-﻿namespace Ksh.Logger;
+﻿using System.Collections.Immutable;
+
+namespace Ksh.Logger;
 
 public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagators) : ILogger
 {
     private bool _isTurnedOff;
 
-    public void TurnOff() => _isTurnedOff = true;
+    public bool TurnOff()
+    {
+        if (!_isTurnedOff)
+        {
+            _isTurnedOff = true;
+            return true;
+        }
+        
+        return false;
+    }
 
-    public void TurnOn() => _isTurnedOff = false;
-
-    public void Trace<T>(T message) => Log(message, LogSeverity.Trace);
-
-    public void Debug<T>(T message) => Log(message, LogSeverity.Debug);
-
-    public void Info<T>(T message) => Log(message, LogSeverity.Info);
-
-    public void Warn<T>(T message) => Log(message, LogSeverity.Warn);
-
-    public void Warn<T>(T message, Exception exn) => Log(message, LogSeverity.Warn, exn);
-
-    public void Error<T>(T message, Exception exn) => Log(message, LogSeverity.Error, exn);
-
-    public void Fatal<T>(T message, Exception exn) => Log(message, LogSeverity.Fatal, exn);
-
-    public void Log(LogMessage message)
+    public bool TurnOn()
     {
         if (_isTurnedOff)
         {
-            return;
+            _isTurnedOff = false;
+            return true;
+        }
+        
+        return false;
+    }
+
+    public IEnumerable<string> Trace<T>(T message) => Log(message, LogSeverity.Trace);
+
+    public IEnumerable<string> Debug<T>(T message) => Log(message, LogSeverity.Debug);
+
+    public IEnumerable<string> Info<T>(T message) => Log(message, LogSeverity.Info);
+
+    public IEnumerable<string> Warn<T>(T message) => Log(message, LogSeverity.Warn);
+
+    public IEnumerable<string> Warn<T>(T message, Exception exn) => Log(message, LogSeverity.Warn, exn);
+
+    public IEnumerable<string> Error<T>(T message, Exception exn) => Log(message, LogSeverity.Error, exn);
+
+    public IEnumerable<string> Fatal<T>(T message, Exception exn) => Log(message, LogSeverity.Fatal, exn);
+
+    public IEnumerable<string> Log(LogMessage message)
+    {
+        if (_isTurnedOff)
+        {
+            return ImmutableArray<string>.Empty;
         }
 
+        var output = new HashSet<string>();
         foreach (var propagator in propagators)
         {
-            propagator.Propagate(message);
+            var plainMessage = propagator.Propagate(message);
+
+            output.Add(plainMessage);
         }
+
+        output.Remove(string.Empty);
+        
+        return output;
     }
 
-    private void Log<T>(T? message, LogSeverity severity)
+    private IEnumerable<string> Log<T>(T? message, LogSeverity severity)
     {
         var safeMessage = GetMessageOrDefault(message);
 
-        Log(new(safeMessage, severity));
+        return Log(new(safeMessage, severity));
     }
 
-    private void Log<T>(T? message, LogSeverity severity, Exception exn)
+    private IEnumerable<string> Log<T>(T? message, LogSeverity severity, Exception exn)
     {
         var safeMessage = GetMessageOrDefault(message);
 
-        Log(new(safeMessage, severity, exn));
+        return Log(new(safeMessage, severity, exn));
     }
 
     private string GetMessageOrDefault<T>(T? message) => message?.ToString() ?? "[null]";

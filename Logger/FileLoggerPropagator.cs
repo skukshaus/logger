@@ -8,7 +8,8 @@ public class FileLoggerPropagator(ILogMessageFormatter formatter, string pathToL
     {
     }
 
-    public void Propagate(LogMessage message)
+
+    public string Propagate(LogMessage message, LogPropagationConfiguration? config)
     {
         ValidatePath();
 
@@ -17,8 +18,16 @@ public class FileLoggerPropagator(ILogMessageFormatter formatter, string pathToL
         if (!string.IsNullOrWhiteSpace(pathToLogFile))
         {
             File.AppendAllText(pathToLogFile, formattedMessage + Environment.NewLine, Encoding.UTF8);
+            
+            return formattedMessage;
         }
+
+        return string.Empty;
     }
+
+    public string Propagate(LogMessage message) => throw new NotImplementedException();
+
+    public ILogMessageFormatter GetFormatter() => throw new NotImplementedException();
 
     private void ValidatePath()
     {

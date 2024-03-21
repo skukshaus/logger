@@ -6,9 +6,18 @@ public class ConsoleLoggerPropagator(ILogMessageFormatter formatter) : ILogMessa
     {
     }
 
-    public void Propagate(LogMessage message)
+    public string Propagate(LogMessage message)
     {
         var formattedMessage = formatter.Format(message);
         Console.WriteLine(formattedMessage);
+        
+        return formattedMessage;
     }
+
+    public string Propagate(LogMessage message, LogPropagationConfiguration config)
+    {
+        throw new NotImplementedException();
+    }
+
+    public ILogMessageFormatter GetFormatter() => throw new NotImplementedException();
 }

@@ -2,7 +2,7 @@ namespace Ksh.Logger.Tests.StandardLoggerFactoryTests;
 
 public partial class StandardLoggerFactoryTest
 {
-    private StandardLoggerFactory _factory;
+    private readonly StandardLoggerFactory _factory;
 
     public StandardLoggerFactoryTest()
     {
@@ -13,9 +13,9 @@ public partial class StandardLoggerFactoryTest
 
     private class InternalPropagator : ILogMessagePropagator
     {
-        public void Propagate(LogMessage message)
-        {
-        }
+        public string Propagate(LogMessage message, LogPropagationConfiguration? config) => throw new NotImplementedException();
+
+        public ILogMessageFormatter GetFormatter() => throw new NotImplementedException();
     }
 
     private class InternalFormatter : ILogMessageFormatter
