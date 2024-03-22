@@ -2,15 +2,15 @@ namespace Ksh.Logger.Tests.ConsoleLoggerPropagatorTests;
 
 public partial class ConsoleLoggerPropagatorTest
 {
-    private readonly ConsoleLoggerPropagator _propagator;
+    private readonly ILogMessageFormatter _formatter;
 
     public ConsoleLoggerPropagatorTest()
     {
-        var formatter = new Mock<ILogMessageFormatter>();
-        formatter
+        var formatterMock = new Mock<ILogMessageFormatter>();
+        formatterMock
             .Setup(x => x.Format(It.IsAny<LogMessage>()))
             .Returns((LogMessage x) => x.Message);
 
-        _propagator = new(formatter.Object);
+        _formatter = formatterMock.Object;
     }
 }

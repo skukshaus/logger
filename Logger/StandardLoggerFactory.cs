@@ -17,24 +17,36 @@ public class StandardLoggerFactory : ILoggerFactory
         _formatter = formatter;
     }
 
-    public ILoggerFactory AddConsoleLogger(ILogMessageFormatter? formatter = null)
-    {
-        var safeFormatter = GetFormatterSafe(formatter);
+    public ILoggerFactory AddConsoleLogger(
+        ILogMessageFormatter? formatter = null,
+        LogSeverity? verbosity = null,
+        LogSeverity? filter = null
+    )
+        => AddPropagator(
+            new ConsoleLoggerPropagator(GetFormatterSafe(formatter), verbosity, filter)
+        );
 
-        return AddPropagator(new ConsoleLoggerPropagator(safeFormatter));
-    }
+    public ILoggerFactory AddConsoleLogger(LogPropagationConfiguration? configuration)
+        => AddPropagator(new ConsoleLoggerPropagator(configuration));
 
-    public ILoggerFactory AddFileLogger(string pathToLogFile, ILogMessageFormatter? formatter = null)
-    {
-        var safeFormatter = GetFormatterSafe(formatter);
+    public ILoggerFactory AddFileLogger(
+        string pathToLogFile,
+        ILogMessageFormatter? formatter = null,
+        LogSeverity? verbosity = null,
+        LogSeverity? filter = null
+    )
+        => AddPropagator(
+            new FileLoggerPropagator(pathToLogFile, GetFormatterSafe(formatter), verbosity, filter)
+        );
 
-        return AddPropagator(new FileLoggerPropagator(pathToLogFile, safeFormatter));
-    }
+    public ILoggerFactory AddFileLogger(FileLogPropagationConfiguration configuration)
+        => AddPropagator(new FileLoggerPropagator(configuration));
+
 
     public ILoggerFactory AddPropagator(ILogMessagePropagator propagator)
     {
         _propagators.Add(propagator);
-        
+
         return this;
     }
 

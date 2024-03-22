@@ -2,39 +2,35 @@ namespace Ksh.Logger.Tests.FileLoggerPropagatorTests;
 
 public partial class FileLoggerPropagatorTest
 {
-    [Theory] 
-    [InlineData(LogSeverity.Trace)]
-    [InlineData(LogSeverity.Debug)]
-    [InlineData(LogSeverity.Info)]
+    [Theory] [InlineData(LogSeverity.Trace)] [InlineData(LogSeverity.Debug)] [InlineData(LogSeverity.Info)]
     public void PropagateV_TraceDebugAndInfoMustAllLogInfos(LogSeverity verbosity)
     {
         // Arrange
         var message = new LogMessage("hello world");
+        var sut = new FileLoggerPropagator(LogFileName, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");
     }
-    
-    [Theory] 
-    [InlineData(LogSeverity.Warn)]
-    [InlineData(LogSeverity.Error)]
-    [InlineData(LogSeverity.Fatal)]
+
+    [Theory] [InlineData(LogSeverity.Warn)] [InlineData(LogSeverity.Error)] [InlineData(LogSeverity.Fatal)]
     public void PropagateV_WarnErrorAndFatalMustAllIgnoreInfos(LogSeverity verbosity)
     {
         // Arrange
         var message = new LogMessage("hello world");
+        var sut = new FileLoggerPropagator(LogFileName, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
     }
 
-    [Theory] 
+    [Theory]
     [InlineData(LogSeverity.Trace)]
     [InlineData(LogSeverity.Debug)]
     [InlineData(LogSeverity.Info)]
@@ -45,15 +41,16 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("bye world", LogSeverity.Fatal);
+        var sut = new FileLoggerPropagator(LogFileName, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("bye world");
     }
 
-    [Theory] 
+    [Theory]
     [InlineData(LogSeverity.Debug)]
     [InlineData(LogSeverity.Info)]
     [InlineData(LogSeverity.Warn)]
@@ -63,12 +60,12 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world", LogSeverity.Trace);
+        var sut = new FileLoggerPropagator(LogFileName, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
     }
-
 }

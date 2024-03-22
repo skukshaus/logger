@@ -10,9 +10,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
+        var sut = new ConsoleLoggerPropagator(_formatter, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");
@@ -26,9 +27,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
+        var sut = new ConsoleLoggerPropagator(_formatter, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
@@ -45,9 +47,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("bye world", LogSeverity.Fatal);
+        var sut = new ConsoleLoggerPropagator(_formatter, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("bye world");
@@ -63,9 +66,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world", LogSeverity.Trace);
+        var sut = new ConsoleLoggerPropagator(_formatter, verbosity: verbosity);
 
         // Act
-        var output = _propagator.Propagate(message, logVerbosity: verbosity);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();

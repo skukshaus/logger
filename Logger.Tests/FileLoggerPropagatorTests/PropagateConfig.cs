@@ -6,13 +6,17 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Debug
-        };
+        var sut = new FileLoggerPropagator(
+            new() {
+                OutputFile = LogFileName,
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug,
+                Formatter = _formatter
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");
@@ -22,13 +26,17 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world", LogSeverity.Warn);
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Debug
-        };
+        var sut = new FileLoggerPropagator(
+            new() {
+                OutputFile = LogFileName,
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug,
+                Formatter = _formatter
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
@@ -37,14 +45,18 @@ public partial class FileLoggerPropagatorTest
     [Fact] public void PropagateC_UsingConfigurationMustIgnoreIfVerbosityDoesNotMatchButFilter()
     {
         // Arrange
-        var message = new LogMessage("hello world", LogSeverity.Info);
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Warn
-        };
+        var message = new LogMessage("hello world");
+        var sut = new FileLoggerPropagator(
+            new() {
+                OutputFile = LogFileName,
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Warn,
+                Formatter = _formatter
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
@@ -59,10 +71,17 @@ public partial class FileLoggerPropagatorTest
             .Returns("foobar");
 
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration { LogMessageFormatter = formatter.Object };
+        var sut = new FileLoggerPropagator(
+            new() {
+                OutputFile = LogFileName,
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug,
+                Formatter = formatter.Object
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Be("foobar");
@@ -72,10 +91,17 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration { LogMessageFormatter = null };
+        var sut = new FileLoggerPropagator(
+            new() {
+                OutputFile = LogFileName,
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug,
+                Formatter = null
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");

@@ -1,29 +1,29 @@
 namespace Ksh.Logger.Tests.FileLoggerPropagatorTests;
 
-public partial class FileLoggerPropagatorTest : IDisposable
+public partial class FileLoggerPropagatorTest
 {
-    private readonly FileLoggerPropagator _propagator;
+    private readonly ILogMessageFormatter _formatter;
     private const string LogFileName = "mock.log";
 
     public FileLoggerPropagatorTest()
     {
-        var formatter = new Mock<ILogMessageFormatter>();
-        formatter
+        var formatterMock = new Mock<ILogMessageFormatter>();
+        formatterMock
             .Setup(x => x.Format(It.IsAny<LogMessage>()))
             .Returns((LogMessage x) => x.Message);
 
-        _propagator = new(LogFileName, formatter.Object);
+        _formatter = formatterMock.Object;
     }
 
-    private string GetContent() => File.ReadAllText(LogFileName);
-
-    public void Dispose()
+    private class CustomFileLogger(
+        string pathToLogFile,
+        ILogMessageFormatter? formatter = null,
+        LogSeverity? verbosity = null,
+        LogSeverity? filter = null
+    ) : FileLoggerPropagator(pathToLogFile, formatter, verbosity, filter)
     {
-        if (File.Exists(LogFileName))
-        {
-            File.Delete(LogFileName);
-        }
-        
-        GC.SuppressFinalize(this);
+        public List<string> LogMessages { get; } = [];
+
+        protected override void WriteToFile(string message) => LogMessages.Add(message);
     }
 }

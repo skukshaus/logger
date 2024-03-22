@@ -1,62 +1,57 @@
 namespace Ksh.Logger;
 
-public class FileLoggerPropagator(string pathToLogFile, ILogMessageFormatter? formatter)
-    : LogMessagePropagatorBase(formatter)
+public class FileLoggerPropagator(
+    string pathToLogFile,
+    ILogMessageFormatter? formatter = null,
+    LogSeverity? verbosity = null,
+    LogSeverity? filter = null
+) : ILogMessagePropagator
 {
-    private readonly ILogMessageFormatter? _formatter = formatter;
-
-    private bool _isPathValidated;
-    private bool _isPathValid;
-
-    public FileLoggerPropagator(string pathToLogFile) : this(pathToLogFile, new StandardLogMessageFormatter())
+    public FileLoggerPropagator(FileLogPropagationConfiguration config) : this(
+        config.OutputFile,
+        config.Formatter,
+        config.Verbosity,
+        config.Filter
+    )
     {
     }
 
-    public override string Propagate(LogMessage message, LogPropagationConfiguration? config)
+    public string Propagate(LogMessage message)
     {
-        if (EntryCanBeIgnored(message, config))
+        if (EntryCanBeIgnored(message))
             return "";
-
-        if (!IsValidPath())
-            return "";
-
-
-        var entry = GetFormattedLogEntry(message, config);
-
-        File.AppendAllText(pathToLogFile, entry + Environment.NewLine, Encoding.UTF8);
-
-        return entry;
-    }
-
-    private bool IsValidPath()
-    {
-        if (_isPathValidated)
-        {
-            return true;
-        }
 
         try
         {
-            _ = new FileInfo(pathToLogFile);
-            _isPathValid = true;
-        }
-        catch (SystemException ex)
-        {
-            Console.WriteLine(ex);
-            _isPathValid = true;
-        }
-        finally
-        {
-            _isPathValidated = true;
-        }
+            var entry = GetFormattedLogEntry(message);
 
-        return _isPathValid;
+            WriteToFile(entry);
+            return entry;
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw new LoggerException("Provided pathname for the logger is null!", ex);
+        }
+        catch (Exception ex)
+        {
+            throw new LoggerException($"Cannot write to file [{pathToLogFile}]", ex);
+        }
     }
 
-    private string GetFormattedLogEntry(LogMessage message, LogPropagationConfiguration? config)
-    {
-        var formatter = config?.LogMessageFormatter ?? _formatter ?? new StandardLogMessageFormatter();
+    protected virtual void WriteToFile(string message)
+        => File.AppendAllText(pathToLogFile, message + Environment.NewLine, Encoding.UTF8);
 
-        return formatter.Format(message);
+    private bool EntryCanBeIgnored(LogMessage message)
+    {
+        message.Deconstruct(out _, out var severity, out _, out _);
+
+        return verbosity > severity || filter != null && filter != severity;
+    }
+
+    private string GetFormattedLogEntry(LogMessage message)
+    {
+        var formatterOrDefault = formatter ?? new StandardLogMessageFormatter();
+
+        return formatterOrDefault.Format(message);
     }
 }

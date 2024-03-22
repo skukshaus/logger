@@ -13,7 +13,6 @@ public class StandardLogMessageFormatter : ILogMessageFormatter
         return output;
     }
 
-
     private string FormatException(Exception? exception)
     {
         if (exception == null)

@@ -6,9 +6,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-
+        var sut = new ConsoleLoggerPropagator(_formatter);
+        
         // Act
-        var msg = _propagator.Propagate(message);
+        var msg = sut.Propagate(message);
 
         // Assert
         msg.Should().Contain("hello world");

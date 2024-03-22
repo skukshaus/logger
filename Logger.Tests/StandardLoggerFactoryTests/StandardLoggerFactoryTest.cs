@@ -11,9 +11,9 @@ public partial class StandardLoggerFactoryTest
         _factory = new(formatter);
     }
 
-    private class InternalPropagator(ILogMessageFormatter? formatter) : LogMessagePropagatorBase(formatter)
+    private class InternalPropagator : ILogMessagePropagator
     {
-        public override string Propagate(LogMessage message, LogPropagationConfiguration? config) => "";
+        public string Propagate(LogMessage message) => "";
     }
 
     private class InternalFormatter : ILogMessageFormatter

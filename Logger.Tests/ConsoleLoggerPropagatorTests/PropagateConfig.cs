@@ -6,13 +6,15 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Debug
-        };
+        var sut = new ConsoleLoggerPropagator(
+            new() {
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");
@@ -22,13 +24,15 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world", LogSeverity.Warn);
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Debug
-        };
+        var sut = new ConsoleLoggerPropagator(
+            new() {
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Debug
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
@@ -38,13 +42,15 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world", LogSeverity.Info);
-        var conf = new LogPropagationConfiguration {
-            LogSeverityFilter = LogSeverity.Info,
-            LogSeverityVerbosity = LogSeverity.Warn
-        };
+        var sut = new ConsoleLoggerPropagator(
+            new() {
+                Filter = LogSeverity.Info,
+                Verbosity = LogSeverity.Warn
+            }
+        );
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().BeEmpty();
@@ -54,15 +60,13 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var formatter = new Mock<ILogMessageFormatter>();
-        formatter
-            .Setup(x => x.Format(It.IsAny<LogMessage>()))
-            .Returns("foobar");
+        formatter.Setup(x => x.Format(It.IsAny<LogMessage>())).Returns("foobar");
 
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration { LogMessageFormatter = formatter.Object };
+        var sut = new ConsoleLoggerPropagator(new() { Formatter = formatter.Object });
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Be("foobar");
@@ -72,10 +76,10 @@ public partial class ConsoleLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-        var conf = new LogPropagationConfiguration { LogMessageFormatter = null };
+        var sut = new ConsoleLoggerPropagator(new() { Formatter = null });
 
         // Act
-        var output = _propagator.Propagate(message, conf);
+        var output = sut.Propagate(message);
 
         // Assert
         output.Should().Contain("hello world");

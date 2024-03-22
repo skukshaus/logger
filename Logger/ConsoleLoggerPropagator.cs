@@ -1,29 +1,39 @@
 namespace Ksh.Logger;
 
-public class ConsoleLoggerPropagator(ILogMessageFormatter? formatter) : LogMessagePropagatorBase(formatter)
+public class ConsoleLoggerPropagator(
+    ILogMessageFormatter? formatter = null,
+    LogSeverity? verbosity = null,
+    LogSeverity? filter = null
+) : ILogMessagePropagator
 {
-    private readonly ILogMessageFormatter? _formatter = formatter;
-
-    public ConsoleLoggerPropagator() : this(new StandardLogMessageFormatter())
+    public ConsoleLoggerPropagator(LogPropagationConfiguration? config) :
+        this(config?.Formatter, config?.Verbosity, config?.Filter)
     {
     }
 
-    public override string Propagate(LogMessage message, LogPropagationConfiguration? config)
+    public string Propagate(LogMessage message)
     {
-        if (EntryCanBeIgnored(message, config))
+        if (EntryCanBeIgnored(message))
             return "";
 
-        var entry = GetFormattedLogEntry(message, config);
-        
+        var entry = GetFormattedLogEntry(message);
+
         Console.WriteLine(entry);
 
         return entry;
     }
 
-    private string GetFormattedLogEntry(LogMessage message, LogPropagationConfiguration? config)
+    private bool EntryCanBeIgnored(LogMessage message)
     {
-        var formatter = config?.LogMessageFormatter ?? _formatter ?? new StandardLogMessageFormatter();
+        message.Deconstruct(out _, out var severity, out _, out _);
 
-        return formatter.Format(message);
+        return verbosity > severity || filter != null && filter != severity;
+    }
+
+    private string GetFormattedLogEntry(LogMessage message)
+    {
+        var safeFormatter = formatter ?? new StandardLogMessageFormatter();
+
+        return safeFormatter.Format(message);
     }
 }
