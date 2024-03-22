@@ -49,6 +49,7 @@ public class IntegrationExample
             .AddFileLogger("warnings.log", filter: LogSeverity.Warn)
             // will tracks errors and fatals
             .AddFileLogger("errors.log", verbosity: LogSeverity.Error)
+            // use some custom propagator
             .CreateLogger();
 
         logger.Info("hello world");    }

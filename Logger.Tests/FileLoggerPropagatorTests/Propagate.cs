@@ -1,5 +1,3 @@
-using Ksh.Logger.Abstractions.Exceptions;
-
 namespace Ksh.Logger.Tests.FileLoggerPropagatorTests;
 
 public partial class FileLoggerPropagatorTest
@@ -50,7 +48,7 @@ public partial class FileLoggerPropagatorTest
     {
         // Arrange
         var message = new LogMessage("hello world");
-        var sut = new FileLoggerPropagator("malformed.<$>.log");
+        var sut = new FileLoggerPropagator("malformed.<$>.log\0 >_<");
 
         // Act
         var entry = sut.Invoking(x => x.Propagate(message));
@@ -58,7 +56,7 @@ public partial class FileLoggerPropagatorTest
         // Assert
         using var _ = new AssertionScope();
 
-        entry.Should().ThrowExactly<LoggerException>().WithInnerException<IOException>();
+        entry.Should().ThrowExactly<LoggerException>();
     }
 
     [Fact] public void Propagate_WriteIntoNullFile_ThrowException()

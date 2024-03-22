@@ -11,11 +11,13 @@ public partial class StandardLoggerFactoryTest
         _factory = new(formatter);
     }
 
+    [ExcludeFromCodeCoverage]
     private class InternalPropagator : ILogMessagePropagator
     {
         public string Propagate(LogMessage message) => "";
     }
 
+    [ExcludeFromCodeCoverage]
     private class InternalFormatter : ILogMessageFormatter
     {
         public string Format(LogMessage message) => "";

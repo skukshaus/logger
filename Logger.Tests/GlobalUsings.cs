@@ -1,11 +1,13 @@
 global using System;
 global using System.Collections.Generic;
+global using System.Diagnostics.CodeAnalysis;
 global using System.IO;
 global using System.Linq;
 global using FluentAssertions;
 global using FluentAssertions.Execution;
 global using Ksh.Logger.Abstractions;
 global using Ksh.Logger.Abstractions.DataClasses;
+global using Ksh.Logger.Abstractions.Exceptions;
 global using Microsoft.Extensions.DependencyInjection;
 global using Moq;
 global using Xunit;
