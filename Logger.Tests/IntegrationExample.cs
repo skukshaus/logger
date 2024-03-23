@@ -52,5 +52,6 @@ public class IntegrationExample
             // use some custom propagator
             .CreateLogger();
 
-        logger.Info("hello world");    }
+        logger.Info("hello world");
+    }
 }
