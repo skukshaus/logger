@@ -22,7 +22,7 @@ jobs:
       - name: Build and Test
         run: |
           dotnet build --no-restore --nologo
-          dotnet test --no-build --verbosity normal --nologo
+          dotnet test --no-build --verbosity minimal --nologo
 
       - name: Create NuGet Package
         run: |
@@ -30,4 +30,4 @@ jobs:
           dotnet pack --nologo
 
       - name: Publish NuGet Package
-        run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --no-symbols true --skip-duplicate
+        run: dotnet nuget push **/*.nupkg --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json --no-symbols --skip-duplicate
