@@ -1,10 +1,11 @@
 namespace Ksh.Logger;
 
-[ExcludeFromCodeCoverage] [SuppressMessage("ReSharper", "InconsistentNaming")]
+[ExcludeFromCodeCoverage]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public static class LoggerModule
 {
     public static IServiceCollection AddKshLogger(this IServiceCollection services)
-        => services.AddScoped<ILogger, StandardLogger>()
-            .AddScoped<ILoggerFactory, StandardLoggerFactory>()
+        => services.AddSingleton<ILogger, StandardLogger>()
+            .AddSingleton<ILoggerFactory, StandardLoggerFactory>()
             .AddTransient<ILogMessageFormatter, StandardLogMessageFormatter>();
 }
