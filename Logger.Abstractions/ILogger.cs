@@ -4,7 +4,7 @@ public interface ILogger
 {
     bool TurnOff();
     bool TurnOn();
-
+    void ChangeScope(string? scope);
     IEnumerable<string> Log(LogMessage message);
     IEnumerable<string> Trace<T>(T message);
     IEnumerable<string> Debug<T>(T message);

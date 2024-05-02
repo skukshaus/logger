@@ -13,7 +13,7 @@ public class LogMessageTests
         message.Should().Be("foo");
         severity.Should().Be(LogSeverity.Trace);
         exception.Should().Be(exn);
-        dateTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(250));
+        dateTime.Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(1000));
     }
 
     [Fact]

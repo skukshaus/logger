@@ -1,9 +1,8 @@
-﻿using System.Collections.Immutable;
-
-namespace Ksh.Logger;
+﻿namespace Ksh.Logger;
 
 public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagators) : ILogger
 {
+    private string? _scope;
     private bool _isTurnedOff;
 
     public bool TurnOff()
@@ -13,7 +12,7 @@ public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagator
             _isTurnedOff = true;
             return true;
         }
-        
+
         return false;
     }
 
@@ -24,8 +23,13 @@ public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagator
             _isTurnedOff = false;
             return true;
         }
-        
+
         return false;
+    }
+
+    public void ChangeScope(string? scope)
+    {
+        _scope = scope;
     }
 
     public IEnumerable<string> Trace<T>(T message) => Log(message, LogSeverity.Trace);
@@ -58,7 +62,7 @@ public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagator
         }
 
         output.Remove(string.Empty);
-        
+
         return output;
     }
 
@@ -66,14 +70,14 @@ public sealed class StandardLogger(IEnumerable<ILogMessagePropagator> propagator
     {
         var safeMessage = GetMessageOrDefault(message);
 
-        return Log(new(safeMessage, severity));
+        return Log(new(safeMessage, severity) { Scope = _scope });
     }
 
     private IEnumerable<string> Log<T>(T? message, LogSeverity severity, Exception exn)
     {
         var safeMessage = GetMessageOrDefault(message);
 
-        return Log(new(safeMessage, severity, exn));
+        return Log(new(safeMessage, severity, exn) { Scope = _scope });
     }
 
     private string GetMessageOrDefault<T>(T? message) => message?.ToString() ?? "[null]";

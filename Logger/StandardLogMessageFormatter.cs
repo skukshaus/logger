@@ -5,18 +5,33 @@ public class StandardLogMessageFormatter : ILogMessageFormatter
     public string Format(LogMessage message)
     {
         var severity = SeverityToName(message.Severity);
-        
-        var output = $"[{severity,5} @ {message.TimeOfDay:s}] ";
-        output += message.Message;
-        output += FormatException(message.Exception);
 
-        return output;
+        var result = new StringBuilder();
+        result.Append('[');
+        result.Append(severity.PadLeft(5));
+        result.Append(" @ ");
+        result.Append(message.TimeOfDay.ToString("s"));
+        result.Append(']');
+        
+        if (!string.IsNullOrWhiteSpace(message.Scope))
+        {
+            result.Append('[');
+            result.Append(message.Scope);
+            result.Append(']');
+        }
+
+        result.Append(' ');
+        result.Append(message.Message);
+        result.Append(FormatException(message.Exception));
+        
+
+        return result.ToString();
     }
 
-    private string FormatException(Exception? exception)
+    private StringBuilder FormatException(Exception? exception)
     {
         if (exception == null)
-            return "";
+            return new();
 
         const string prefix = " ~> ";
 
@@ -31,7 +46,11 @@ public class StandardLogMessageFormatter : ILogMessageFormatter
         {
             foreach (var line in exception.StackTrace.Split(Environment.NewLine))
             {
-                error.Append($"{Environment.NewLine}{prefix}  {line.Trim()}");
+                error.Append(Environment.NewLine);
+                error.Append(prefix);
+                error.Append(' ');
+                error.Append(' ');
+                error.Append(line.Trim());
             }
         }
 
@@ -42,7 +61,7 @@ public class StandardLogMessageFormatter : ILogMessageFormatter
             error.Append(FormatException(exception.InnerException));
         }
 
-        return error.ToString();
+        return error;
     }
 
 

@@ -85,4 +85,21 @@ public class StandardLogMessageFormatterTest(ITestOutputHelper xout)
             """
         );
     }
+
+    [Fact]
+    public void Format_MessageWithScopeMustPrintTheScopeContent()
+    {
+        // Arrange
+        var msg = new LogMessage("hello world") {
+            TimeOfDay = _fixedDate,
+            Scope = "foobar"
+        };
+
+        // Act
+        var output = _formatter.Format(msg);
+
+        // Assert
+        xout.WriteLine(output);
+        output.Should().Be($"[ info @ 2020-05-04T13:37:42][foobar] hello world");        
+    }
 }

@@ -3,6 +3,7 @@ namespace Ksh.Logger.Abstractions.DataClasses;
 public record LogMessage(string Message, LogSeverity Severity = LogSeverity.Info, Exception? Exception = default)
 {
     public DateTime TimeOfDay { get; init; } = DateTime.Now;
+    public string? Scope { get; init; }
 
     public void Deconstruct(out string message, out LogSeverity severity, out Exception? exception, out DateTime time)
         => (message, severity, exception, time) = (Message, Severity, Exception, TimeOfDay);
@@ -20,7 +21,7 @@ public record LogMessage(string Message, LogSeverity Severity = LogSeverity.Info
 
     public override int GetHashCode()
     {
-        //unchecked
+        unchecked
         {
             var number = 17;
             number = number * 23 + Message.GetHashCode();
