@@ -2,7 +2,7 @@
     <PropertyGroup>
         <Authors>Sergej Kukshaus</Authors>
         <AssemblyName>Ksh.Logger</AssemblyName>
-        <AssemblyVersion>2024.2.1</AssemblyVersion>
+        <AssemblyVersion>2024.2.2</AssemblyVersion>
 
         <RootNamespace>$(AssemblyName)</RootNamespace>
         <TargetFramework>net8.0</TargetFramework>

@@ -20,10 +20,11 @@ public partial class FileLoggerPropagatorTest
         ILogMessageFormatter? formatter = null,
         LogSeverity? verbosity = null,
         LogSeverity? filter = null
-    ) : FileLoggerPropagator(pathToLogFile, formatter, verbosity, filter)
+    ) : LogMessagePropagatorBase(formatter, verbosity, filter)
     {
         public List<string> LogMessages { get; } = [];
 
-        protected override void WriteToFile(string message) => LogMessages.Add(message);
+        // protected void HandleLogMessage(string message) => LogMessages.Add(message);
+        protected override void HandleLogMessage(string message) => LogMessages.Add(message);
     }
 }
